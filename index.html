@@ -19,10 +19,10 @@
       <p id="plant-desc">找找看植物在哪裡呢？</p>
     </div>
 
-    <!-- AR 場景設定 -->
+    <!-- AR 場景設定：移除了 barcode 的專屬設定，改回預設模式 -->
     <a-scene
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+      arjs="sourceType: webcam; debugUIEnabled: false;"
     >
       <!-- 預載 3D 模型資源 -->
       <a-assets>
@@ -36,10 +36,9 @@
         ></a-asset-item>
       </a-assets>-->
 
-      <!-- 植物一：向日葵 (使用 barcode 標記或自訂圖卡) -->
-      <!-- 這裡設定 marker 觸發時會發送事件給 app.js -->
-      <a-marker type="barcode" value="1" id="marker-sunflower">
-        <!-- 設定模型大小與位置，並加上簡單的旋轉動畫 -->
+      <!-- 植物一：樹木 -->
+      <!-- type 改為 pattern，url 指向你產生的 .patt 檔案 -->
+      <a-marker type="pattern" url="assets/markers/Tree1.pat" id="marker-sunflower">
         <a-entity
           gltf-model="#Tree1-model"
           scale="0.5 0.5 0.5"
@@ -50,7 +49,7 @@
       </a-marker>
 
       <!-- 植物二：仙人掌 -->
-      <a-marker type="barcode" value="2" id="marker-cactus">
+      <a-marker type="pattern" url="assets/markers/cactus-marker.patt" id="marker-cactus">
         <a-entity
           gltf-model="#cactus-model"
           scale="0.5 0.5 0.5"
