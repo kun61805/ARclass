@@ -27,21 +27,21 @@
       <!-- 預載 3D 模型資源 -->
       <a-assets>
         <a-asset-item
-          id="sunflower-model"
+          id="Tree1-model"
           src="assets/models/Tree1.glb"
         ></a-asset-item>
-        <a-asset-item
+        <!--<a-asset-item
           id="cactus-model"
           src="assets/models/cactus.glb"
         ></a-asset-item>
-      </a-assets>
+      </a-assets>-->
 
       <!-- 植物一：向日葵 (使用 barcode 標記或自訂圖卡) -->
       <!-- 這裡設定 marker 觸發時會發送事件給 app.js -->
       <a-marker type="barcode" value="1" id="marker-sunflower">
         <!-- 設定模型大小與位置，並加上簡單的旋轉動畫 -->
         <a-entity
-          gltf-model="#sunflower-model"
+          gltf-model="#Tree1-model"
           scale="0.5 0.5 0.5"
           position="0 0 0"
           animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"
