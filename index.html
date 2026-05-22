@@ -7,39 +7,34 @@
       content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
     <title>AR 植物探索小尖兵</title>
-    <!-- 引入 A-Frame 與 AR.js 函式庫 -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body style="margin: 0; overflow: hidden">
-    <!-- UI 顯示區：給小朋友看的提示文字與植物介紹 -->
+    
     <div id="ui-container">
       <h1 id="plant-name">請掃描圖卡</h1>
       <p id="plant-desc">找找看植物在哪裡呢？</p>
     </div>
 
-
-    <!-- AR 場景設定：移除了 barcode 的專屬設定，改回預設模式 -->
     <a-scene
+      mindar-image="imageTargetSrc: assets/markers/targets.mind;"
       embedded
-      arjs="sourceType: webcam; debugUIEnabled: false;"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
     >
-      <!-- 預載 3D 模型資源 -->
       <a-assets>
-        <a-asset-item
-          id="Tree1-model"
-          src="assets/models/Tree1.glb"
-        ></a-asset-item>
-        <!--<a-asset-item
-          id="cactus-model"
-          src="assets/models/cactus.glb"
-        ></a-asset-item>
-      </a-assets>-->
+        <a-asset-item id="Tree1-model" src="assets/models/Tree1.glb"></a-asset-item>
+        <a-asset-item id="cactus-model" src="assets/models/cactus.glb"></a-asset-item>
+      </a-assets>
 
-      <!-- 植物一：樹木 -->
-      <!-- type 改為 pattern，url 指向你產生的 .patt 檔案 -->
-      <a-marker type="pattern" url="assets/markers/Tree1.patt" id="marker-sunflower">
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0" id="target-tree">
         <a-entity
           gltf-model="#Tree1-model"
           scale="0.5 0.5 0.5"
@@ -47,10 +42,9 @@
           animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"
         >
         </a-entity>
-      </a-marker>
+      </a-entity>
 
-      <!-- 植物二：仙人掌 -->
-      <a-marker type="pattern" url="assets/markers/cactus-marker.patt" id="marker-cactus">
+      <a-entity mindar-image-target="targetIndex: 1" id="target-cactus">
         <a-entity
           gltf-model="#cactus-model"
           scale="0.5 0.5 0.5"
@@ -58,10 +52,8 @@
           animation="property: rotation; to: 0 360 0; loop: true; dur: 5000"
         >
         </a-entity>
-      </a-marker>
+      </a-entity>
 
-      <!-- 攝影機視角 -->
-      <a-entity camera></a-entity>
     </a-scene>
 
     <script src="app.js"></script>
