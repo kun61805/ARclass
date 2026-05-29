@@ -9,11 +9,11 @@ plant-ar-project/
 
 
 
-📂 assets
-┣ 📂 markers
-┃ ┗ 📄 targets.mind
-┗ 📂 models
-┣ 📄 Tree1.glb
-┗ 📄 cactus.glb (記得補上，或刪除對應程式碼)
+📂
+┣ 📂 
+┃ ┗ 📄 
+┗ 📂 
+┣ 📄 
+┗ 📄 
 
 AR.js自訂圖片製作:https://hiukim.github.io/mind-ar-js-doc/tools/compile/

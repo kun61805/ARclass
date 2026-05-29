@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>MindAR 平面影像與文字解說示範</title>
+  <title>MindAR 多圖辨識與動態解說示範</title>
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <style>
@@ -21,13 +21,13 @@
       transform: translateX(-50%);
       width: 85%;
       max-width: 400px;
-      background: rgba(20, 20, 20, 0.85); /* 半透明黑底 */
+      background: rgba(20, 20, 20, 0.85);
       color: white;
       padding: 20px;
       border-radius: 15px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.4);
       z-index: 1000;
-      display: none; /* 初始隱藏，掃描到才顯示 */
+      display: none; /* 初始隱藏 */
       text-align: left;
       backdrop-filter: blur(5px);
     }
@@ -45,7 +45,7 @@
   </style>
 
   <script>
-    // 互動縮放與旋轉腳本
+    // 互動縮放與旋轉腳本 (保持不變)
     AFRAME.registerComponent('touch-transform', {
       init: function () {
         const el = this.el;
@@ -109,19 +109,34 @@
       }
     });
 
-    // 偵測掃描狀態以顯示/隱藏文字
+    // --- 修改重點：支援多圖辨識與動態文字替換 ---
     document.addEventListener("DOMContentLoaded", function() {
-      const target = document.querySelector('#target-entity');
+      // 抓取所有帶有 ar-target class 的實體
+      const targets = document.querySelectorAll('.ar-target');
+
       const infoPanel = document.querySelector('#info-panel');
+      const panelTitle = document.querySelector('#panel-title');
+      const panelDesc = document.querySelector('#panel-desc');
 
-      // 當攝影機捕捉到辨識圖時
-      target.addEventListener("targetFound", event => {
-        infoPanel.style.display = "block";
-      });
+      // 為每一個辨識圖綁定事件
+      targets.forEach(target => {
+        target.addEventListener("targetFound", event => {
+          // 抓取該標籤上設定的 data-title 和 data-desc 屬性
+          const titleText = target.getAttribute('data-title');
+          const descText = target.getAttribute('data-desc');
 
-      // 當辨識圖離開畫面時
-      target.addEventListener("targetLost", event => {
-        infoPanel.style.display = "none";
+          // 將抓取到的文字放入面板中
+          panelTitle.innerHTML = titleText;
+          panelDesc.innerHTML = descText;
+
+          // 顯示面板
+          infoPanel.style.display = "block";
+        });
+
+        target.addEventListener("targetLost", event => {
+          // 隱藏面板
+          infoPanel.style.display = "none";
+        });
       });
     });
   </script>
@@ -129,13 +144,8 @@
 <body>
 
 <div id="info-panel">
-  <h3>🖼️ 影像介紹</h3>
-  <p>這是一張會跳出解說文字的平面影像！<br>
-    💡 <b>操作提示：</b><br>
-    • 單指雙擊：重置大小與角度<br>
-    • 雙指捏合：放大與縮小影像<br>
-    • 雙指旋轉：旋轉影像方向
-  </p>
+  <h3 id="panel-title"></h3>
+  <p id="panel-desc"></p>
 </div>
 
 <a-scene
@@ -146,22 +156,25 @@
         device-orientation-permission-ui="enabled: false"
 >
   <a-assets>
-    <img id="resultImg" src="card1.jpeg" />
+    <img id="img1" src="card1.jpeg" />
+    <img id="img2" src="Tree.jpg" />
   </a-assets>
 
   <a-light type="ambient" intensity="3"></a-light>
-
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-  <a-entity id="target-entity" mindar-image-target="targetIndex: 0">
-    <a-plane
-            src="#resultImg"
-            width="1.2"
-            height="0.7"
-            position="0 0 0"
-            touch-transform
-    ></a-plane>
+  <a-entity class="ar-target" mindar-image-target="targetIndex: 0"
+            data-title="🖼️ 介紹"
+            data-desc="這是第一張圖的專屬說明！<br>💡 <b>操作提示：</b>雙指可放大縮小。">
+    <a-plane src="#img1" width="1.2" height="0.7" position="0 0 0" touch-transform></a-plane>
   </a-entity>
+
+  <a-entity class="ar-target" mindar-image-target="targetIndex: 1"
+            data-title="·🌟 我是植物"
+            data-desc="這裡是第二張圖片的解說內容，你可以自由寫入想要傳達的故事。<br>甚至可以加入連結或更多行數！">
+    <a-plane src="#img2" width="1.2" height="0.7" position="0 0 0" touch-transform></a-plane>
+  </a-entity>
+
 </a-scene>
 </body>
 </html>
