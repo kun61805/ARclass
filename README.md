@@ -6,4 +6,15 @@ plant-ar-project/
 ├── markers/ # 存放訓練好的 AR 辨識圖 (如 .patt 檔)
 └── models/ # 存放植物的 3D 模型 (建議使用 .glb 格式)
 
+
+
+
+
+📂 assets
+┣ 📂 markers
+┃ ┗ 📄 targets.mind
+┗ 📂 models
+┣ 📄 Tree1.glb
+┗ 📄 cactus.glb (記得補上，或刪除對應程式碼)
+
 AR.js自訂圖片製作:https://hiukim.github.io/mind-ar-js-doc/tools/compile/
