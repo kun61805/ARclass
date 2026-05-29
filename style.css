@@ -1,29 +1,35 @@
-/* 將 UI 疊加在 AR 攝影機畫面上方 */
+/* 讓 UI 浮動在畫面下方 */
 #ui-container {
   position: absolute;
-  bottom: 5%;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  width: 85%;
-  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1000; /* 確保浮在攝影機畫面上方 */
+
+  /* 外觀美化 */
+  background: rgba(255, 255, 255, 0.85); /* 半透明白色背景 */
+  backdrop-filter: blur(5px); /* 毛玻璃效果 */
+  padding: 15px 25px;
   border-radius: 20px;
-  padding: 20px;
   text-align: center;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 10; /* 確保 UI 在最上層 */
-  border: 4px solid #4caf50; /* 加上綠色邊框增加自然感 */
-  font-family: "微軟正黑體", sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  /* 版面限制 */
+  width: 80%;
+  max-width: 400px;
+  font-family: 'Helvetica Neue', Arial, '微軟正黑體', sans-serif;
+  pointer-events: none; /* 避免擋住 AR 畫面的觸控 */
 }
 
 #plant-name {
   margin: 0 0 10px 0;
-  font-size: 32px;
-  color: #2e7d32;
+  color: #2e7d32; /* 森林綠 */
+  font-size: 24px;
 }
 
 #plant-desc {
   margin: 0;
-  font-size: 22px;
-  color: #333;
+  color: #444;
+  font-size: 16px;
   line-height: 1.5;
 }
