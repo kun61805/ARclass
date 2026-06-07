@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>MindAR 多圖辨識與動態解說示範</title>
+  <title>植物辨識</title>
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <style>
@@ -11,6 +11,56 @@
       margin: 0;
       overflow: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* --- 新增：初始提示視窗的樣式 --- */
+    #startup-modal {
+      position: fixed; /* 固定在畫面上 */
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999; /* 確保在最上層 */
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 80%;
+      max-width: 350px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .modal-content h2 {
+      margin: 0 0 15px 0;
+      color: #2E7D32;
+      font-size: 22px;
+    }
+    .modal-content p {
+      margin: 0 0 25px 0;
+      color: #555;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .start-btn {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+    }
+    .start-btn:active {
+      background: #388E3C;
     }
 
     /* 解說文字面板的樣式 */
@@ -45,7 +95,7 @@
   </style>
 
   <script>
-    // 互動縮放與旋轉腳本 (保持不變)
+    // 互動縮放與旋轉腳本
     AFRAME.registerComponent('touch-transform', {
       init: function () {
         const el = this.el;
@@ -109,32 +159,31 @@
       }
     });
 
-    // --- 修改重點：支援多圖辨識與動態文字替換 ---
     document.addEventListener("DOMContentLoaded", function() {
-      // 抓取所有帶有 ar-target class 的實體
-      const targets = document.querySelectorAll('.ar-target');
+      // --- 新增：處理初始提示視窗的關閉邏輯 ---
+      const startupModal = document.getElementById('startup-modal');
+      const startBtn = document.getElementById('start-btn');
 
+      startBtn.addEventListener('click', () => {
+        startupModal.style.display = 'none'; // 點擊按鈕後隱藏視窗
+      });
+
+      // 支援多圖辨識與動態文字替換
+      const targets = document.querySelectorAll('.ar-target');
       const infoPanel = document.querySelector('#info-panel');
       const panelTitle = document.querySelector('#panel-title');
       const panelDesc = document.querySelector('#panel-desc');
 
-      // 為每一個辨識圖綁定事件
       targets.forEach(target => {
         target.addEventListener("targetFound", event => {
-          // 抓取該標籤上設定的 data-title 和 data-desc 屬性
           const titleText = target.getAttribute('data-title');
           const descText = target.getAttribute('data-desc');
-
-          // 將抓取到的文字放入面板中
           panelTitle.innerHTML = titleText;
           panelDesc.innerHTML = descText;
-
-          // 顯示面板
           infoPanel.style.display = "block";
         });
 
         target.addEventListener("targetLost", event => {
-          // 隱藏面板
           infoPanel.style.display = "none";
         });
       });
@@ -142,6 +191,14 @@
   </script>
 </head>
 <body>
+
+<div id="startup-modal">
+  <div class="modal-content">
+    <h2>🌿 歡迎使用植物辨識</h2>
+    <p>請將手機鏡頭對準<b>植物圖卡</b><br>即可觀看 AR 動態解說！</p>
+    <button class="start-btn" id="start-btn">開始掃描</button>
+  </div>
+</div>
 
 <div id="info-panel">
   <h3 id="panel-title"></h3>
@@ -156,11 +213,11 @@
         device-orientation-permission-ui="enabled: false"
 >
   <a-assets>
-    <img id="img1" src="banyantree.jpg" /> //榕樹插圖
-    <img id="img2" src="Cherryblossoms.jpg" />//櫻花插圖
-    <img id="img3" src="coconuttrees.jpg" /> //椰子樹插圖
-    <img id="img4" src="roses.jpg" />//玫瑰花插圖
-    <img id="img5" src="sunflower.jpg" /> //向日葵插圖
+    <img id="img1" src="banyantree.jpg" /> 
+    <img id="img2" src="Cherryblossoms.jpg" />
+    <img id="img3" src="coconuttrees.jpg" /> 
+    <img id="img4" src="roses.jpg" />
+    <img id="img5" src="sunflower.jpg" /> 
   </a-assets>
 
   <a-light type="ambient" intensity="3"></a-light>
@@ -169,32 +226,32 @@
 
   <a-entity class="ar-target" mindar-image-target="targetIndex: 0"
             data-title="🌟榕樹"
-            data-desc="榕樹，亦稱正榕，細葉榕、萬年青、鬼仔樹、鳥松，是桑科榕屬的一個常見物種。榕樹外型類似另一近親孟加拉榕。 榕樹適合於炎熱潮濕地區生長，在福建、廣東、香港、台灣以及馬來西亞等地方很常見，是福建省和福州市的省樹與市樹。榕樹的葉小，有蠟質表面，能進行光合作用，是常綠植物，是四季變化不明顯的樹木<br>💡 <b>操作提示：</b>雙指可放大縮小，點一下即可重設圖片。">
+            data-desc="榕樹，亦稱正榕，細葉榕、萬年青、鬼仔樹、鳥松，是桑科榕屬的一個常見物種。榕樹外型類似另一近親孟加拉榕。 榕樹適合於炎熱潮濕地區生長，在福建、廣東、香港、台灣以及馬來西亞等地方很常見，是福建省和福州市的省樹與市樹。榕樹的葉小，有蠟質表面，能進行光合作用，是常綠植物，是四季變化不明顯的樹木<br>💡 <b>操作提示：</b>雙指可放大縮小，點兩下即可重設圖片。">
     <a-plane src="#img1" width="1.2" height="0.7" position="0 0 0" touch-transform></a-plane>
   </a-entity>
 
   <a-entity class="ar-target" mindar-image-target="targetIndex: 1"
              data-title="🌸櫻花"
-             data-desc="櫻花是薔薇科櫻屬植物的統稱，主要分佈在東亞地區。它們以美麗的花朵聞名，花色多為粉紅色或白色，象徵春天和生命的短暫。每年春季，許多國家都會舉辦盛大的賞櫻活動，吸引大量遊客前來觀賞。<br>💡 <b>操作提示：</b>雙指可放大縮小，點一下即可重設圖片。">
+             data-desc="櫻花是薔薇科櫻屬植物的統稱，主要分佈在東亞地區。它們以美麗的花朵聞名，花色多為粉紅色或白色，象徵春天和生命的短暫。每年春季，許多國家都會舉辦盛大的賞櫻活動，吸引大量遊客前來觀賞。<br>💡 <b>操作提示：</b>雙指可放大縮小，點兩下即可重設圖片。">
              <a-plane src="#img2" width="1.2" height="0.7" position="0 0 0" touch-transform></a-plane>
   </a-entity>
 
     <a-entity class="ar-target" mindar-image-target="targetIndex: 2"
             data-title="🥥椰子樹"
-            data-desc="椰子樹是棕櫚科椰子屬的植物，是熱帶地區常見的樹木。椰子樹高大挺拔，葉片大而寬，果實為椰子，具有很高的經濟價值。<br>💡 <b>操作提示：</b>雙指可放大縮小，點一下即可重設圖片。">
+            data-desc="椰子樹是棕櫚科椰子屬的植物，是熱帶地區常見的樹木。椰子樹高大挺拔，葉片大而寬，果實為椰子，具有很高的經濟價值。<br>💡 <b>操作提示：</b>雙指可放大縮小，點兩下即可重設圖片。">
     <a-plane src="#img3" width="1.2" height="0.7" position="0 0 0" touch-transform></a-plane>
   </a-entity>
 
   <a-entity class="ar-target" mindar-image-target="targetIndex: 3"
             data-title="🌹玫瑰花"
-            data-desc="玫瑰花是薔薇科薔薇屬的植物，是世界上最著名的花卉之一。它們以美麗的花朵和濃鬱的香氣聞名，常被用作愛情和美的象徵。玫瑰花有多種顏色和品種，每種都有其獨特的魅力。<br>💡 <b>操作提示：</b>雙指可放大縮小，點一下即可重設圖片。">
+            data-desc="玫瑰花是薔薇科薔薇屬的植物，是世界上最著名的花卉之一。它們以美麗的花朵和濃鬱的香氣聞名，常被用作愛情和美的象徵。玫瑰花有多種顏色和品種，每種都有其獨特的魅力。<br>💡 <b>操作提示：</b>雙指可放大縮小，點兩下即可重設圖片。">
     <a-plane src="#img4" width="1.2" height="0.7" position="0 0 0" touch-transform></a-plane>
   </a-entity>
 
 
   <a-entity class="ar-target" mindar-image-target="targetIndex: 4"
              data-title="🌻向日葵"
-             data-desc="向日葵是菊科向日葵屬的植物，以其大而明亮的花盤而聞名。它們通常有黃色的花瓣和棕色的中心，象徵著陽光和積極的能量。向日葵不僅美麗，還具有實用價值，種子可以榨油或作為零食食用。<br>💡 <b>操作提示：</b>雙指可放大縮小，點一下即可重設圖片。">
+             data-desc="向日葵是菊科向日葵屬的植物，以其大而明亮的花盤而聞名。它們通常有黃色的花瓣和棕色的中心，象徵著陽光和積極的能量。向日葵不僅美麗，還具有實用價值，種子可以榨油或作為零食食用。<br>💡 <b>操作提示：</b>雙指可放大縮小，點兩下即可重設圖片。">
     <a-plane src="#img5" width="1.2" height="0.7" position="0 0 0" touch-transform></a-plane>
   </a-entity>
 
